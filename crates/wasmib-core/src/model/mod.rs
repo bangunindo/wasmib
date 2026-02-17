@@ -680,7 +680,7 @@ impl Model {
     ///
     /// Uses BFS traversal from roots to compute OIDs efficiently in O(n) time
     /// instead of O(n × depth) by processing parents before children.
-    fn rebuild_indices(&mut self) {
+    pub fn rebuild_indices(&mut self) {
         self.oid_to_node.clear();
         self.module_name_to_id.clear();
         self.name_to_nodes.clear();
