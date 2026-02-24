@@ -418,6 +418,17 @@ impl Model {
         None
     }
 
+    /// Add a definition to a node and update the name index.
+    pub fn add_node_definition(&mut self, node_id: NodeId, def: NodeDefinition) {
+        self.name_to_nodes
+            .entry(def.label.clone())
+            .or_default()
+            .push(node_id);
+        if let Some(node) = self.nodes.get_mut(node_id.to_index()) {
+            node.add_definition(def);
+        }
+    }
+
     /// Add a root node.
     pub fn add_root(&mut self, node_id: NodeId) {
         self.roots.push(node_id);
@@ -496,6 +507,11 @@ impl Model {
         self.nodes.len()
     }
 
+    /// Iterate over all nodes.
+    pub fn nodes(&self) -> impl Iterator<Item = &OidNode> {
+        self.nodes.iter()
+    }
+
     // === Type Operations ===
 
     /// Add a type and return its ID.
@@ -558,6 +574,11 @@ impl Model {
         self.types.len()
     }
 
+    /// Iterate over all types.
+    pub fn types(&self) -> impl Iterator<Item = &ResolvedType> {
+        self.types.iter()
+    }
+
     // === Object Operations ===
 
     /// Add an object and return its ID.
@@ -585,6 +606,11 @@ impl Model {
     #[must_use]
     pub fn object_count(&self) -> usize {
         self.objects.len()
+    }
+
+    /// Iterate over all objects.
+    pub fn objects(&self) -> impl Iterator<Item = &ResolvedObject> {
+        self.objects.iter()
     }
 
     // === Notification Operations ===
@@ -617,6 +643,11 @@ impl Model {
     #[must_use]
     pub fn notification_count(&self) -> usize {
         self.notifications.len()
+    }
+
+    /// Iterate over all notifications.
+    pub fn notifications(&self) -> impl Iterator<Item = &ResolvedNotification> {
+        self.notifications.iter()
     }
 
     // === Status ===
