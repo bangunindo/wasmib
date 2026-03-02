@@ -400,8 +400,8 @@ fn resolve_trap_type_definitions(ctx: &mut ResolverContext, trap_defs: Vec<TrapT
         let label = def_name.as_str().into();
         let node_def = NodeDefinition::new(def.module_id, label);
 
+        ctx.model.add_node_definition(trap_node_id, node_def);
         if let Some(node) = ctx.model.get_node_mut(trap_node_id) {
-            node.add_definition(node_def);
             node.kind = NodeKind::Notification;
         }
 
@@ -672,8 +672,8 @@ fn resolve_oid_definition_inner<TR: OidTracer>(
                     // Add definition for intermediate named components (matches libsmi behavior)
                     if !is_last && let Some(node_id) = current_node {
                         let node_def = NodeDefinition::new(module_id, name_id);
+                        ctx.model.add_node_definition(node_id, node_def);
                         if let Some(node) = ctx.model.get_node_mut(node_id) {
-                            node.add_definition(node_def);
                             if node.kind == NodeKind::Internal {
                                 node.kind = NodeKind::Node;
                             }
@@ -746,8 +746,8 @@ fn resolve_oid_definition_inner<TR: OidTracer>(
                     // Add definition for intermediate named components (matches libsmi behavior)
                     if !is_last && let Some(node_id) = current_node {
                         let node_def = NodeDefinition::new(module_id, name_id);
+                        ctx.model.add_node_definition(node_id, node_def);
                         if let Some(node) = ctx.model.get_node_mut(node_id) {
-                            node.add_definition(node_def);
                             if node.kind == NodeKind::Internal {
                                 node.kind = NodeKind::Node;
                             }
@@ -768,9 +768,8 @@ fn resolve_oid_definition_inner<TR: OidTracer>(
             let label = def_name.as_str().into();
             let node_def = NodeDefinition::new(module_id, label);
 
+            ctx.model.add_node_definition(node_id, node_def);
             if let Some(node) = ctx.model.get_node_mut(node_id) {
-                node.add_definition(node_def);
-
                 // Set the node kind based on definition type
                 let kind = match def.def_kind {
                     DefinitionKind::ObjectType => {
